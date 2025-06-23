@@ -1,5 +1,4 @@
 package TTTGUI;
-
 import java.awt.*;
 /**
  * The TTT.TTT.Cell class models each individual cell of the game board.

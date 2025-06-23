@@ -1,5 +1,4 @@
 package TTT;
-
 /**
  *  The enum TTT.TTT.State defines the various game states of the TTT game
  */
