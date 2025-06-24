@@ -24,11 +24,10 @@ public class GameMain extends JPanel {
     private Board board;         // the game board
     private State currentState;  // the current state of the game
     private Seed currentPlayer;  // the current player
-    private JLabel statusBar;    // for displaying status message
+    private JLabel statusBar;// for displaying status message
 
     /** Constructor to setup the UI and game components */
     public GameMain() {
-
         // This JPanel fires MouseEvent
         super.addMouseListener(new MouseAdapter() {
             @Override
