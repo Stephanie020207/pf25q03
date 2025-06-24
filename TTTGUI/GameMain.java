@@ -2,6 +2,9 @@ package TTTGUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.sql.*;
 import java.util.Scanner;
 import javax.swing.*;
@@ -11,6 +14,8 @@ import javax.swing.*;
  */
 public class GameMain extends JPanel {
     private static final long serialVersionUID = 1L; // to prevent serializable warning
+
+    private BufferedImage backgroundImage;
 
     // Define named constants for the drawing graphics
     public static final String TITLE = "Tic Tac Toe";
@@ -25,9 +30,18 @@ public class GameMain extends JPanel {
     private State currentState;  // the current state of the game
     private Seed currentPlayer;  // the current player
     private JLabel statusBar;// for displaying status message
+    private int boardSize;
 
     /** Constructor to setup the UI and game components */
     public GameMain() {
+
+        try {
+            backgroundImage = ImageIO.read(getClass().getResource("/TTTGUI/background.jpg"));
+        } catch (IOException e) {
+            System.err.println("Could not load background image.");
+            e.printStackTrace();
+        }
+
         // This JPanel fires MouseEvent
         super.addMouseListener(new MouseAdapter() {
             @Override
@@ -94,7 +108,10 @@ public class GameMain extends JPanel {
     @Override
     public void paintComponent(Graphics g) {  // Callback via repaint()
         super.paintComponent(g);
-        setBackground(COLOR_BG); // set its background color
+
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
 
         board.paint(g);  // ask the game board to paint itself
 
