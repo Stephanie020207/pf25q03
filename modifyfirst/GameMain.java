@@ -79,8 +79,26 @@ public class GameMain extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        board.paint(g);
+
+        // Get the dimensions of the current panel
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+
+        // Calculate the total board size
+        int boardWidth = Cell.SIZE * Board.COLS;
+        int boardHeight = Cell.SIZE * Board.ROWS;
+
+        // Calculate offsets to center the board
+        int offsetX = (panelWidth - boardWidth) / 2;
+        int offsetY = (panelHeight - boardHeight) / 2;
+
+        // Draw the board grid and cells
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.translate(offsetX, offsetY); // Shift the drawing starting point
+        board.paint(g2d);
+        g2d.dispose();
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
