@@ -1,5 +1,4 @@
 package modifyfirst;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,11 +12,17 @@ public class GameMain extends JPanel {
     private Board board;
     private State currentState;
     private Seed currentPlayer;
+    private JLabel statusBar;
 
     public GameMain() {
         setLayout(new BorderLayout());
         board = new Board(BOARD_SIZE);
+        statusBar = new JLabel("X's Turn");
+        statusBar.setFont(new Font("Arial", Font.BOLD, 16));
+        statusBar.setHorizontalAlignment(SwingConstants.CENTER);
+        add(statusBar, BorderLayout.SOUTH);
         initGame();
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -31,6 +36,7 @@ public class GameMain extends JPanel {
                             && board.cells[row][col].content == Seed.NO_SEED) {
                         currentState = board.stepGame(currentPlayer, row, col);
                         currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+                        updateStatus();
                     }
                 } else {
                     newGame();
@@ -50,7 +56,24 @@ public class GameMain extends JPanel {
         board.initGame();
         currentState = State.PLAYING;
         currentPlayer = Seed.CROSS;
+        updateStatus();
         repaint();
+    }
+
+    private void updateStatus() {
+        if (currentState == State.PLAYING) {
+            statusBar.setForeground(Color.BLACK);
+            statusBar.setText((currentPlayer == Seed.CROSS) ? "X's Turn" : "O's Turn");
+        } else if (currentState == State.DRAW) {
+            statusBar.setForeground(Color.RED);
+            statusBar.setText("It's a Draw! Click to play again.");
+        } else if (currentState == State.CROSS_WON) {
+            statusBar.setForeground(Color.RED);
+            statusBar.setText("'X' Won! Click to play again.");
+        } else if (currentState == State.NOUGHT_WON) {
+            statusBar.setForeground(Color.RED);
+            statusBar.setText("'O' Won! Click to play again.");
+        }
     }
 
     @Override

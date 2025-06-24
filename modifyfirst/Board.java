@@ -1,5 +1,4 @@
 package modifyfirst;
-
 import java.awt.*;
 
 /**
@@ -43,7 +42,7 @@ public class Board {
         // Update the cell with the player's move.
         cells[selectedRow][selectedCol].content = player;
 
-        // Check for a win in the current row.
+        // Check for a win in the row
         boolean winRow = true;
         for (int col = 0; col < COLS; ++col) {
             if (cells[selectedRow][col].content != player) {
@@ -52,7 +51,7 @@ public class Board {
             }
         }
 
-        // Check for a win in the current column.
+        // Check for a win in the column
         boolean winCol = true;
         for (int row = 0; row < ROWS; ++row) {
             if (cells[row][selectedCol].content != player) {
@@ -61,7 +60,7 @@ public class Board {
             }
         }
 
-        // Check for a win in the main diagonal.
+        // Check for a win in the main diagonal
         boolean winDiag = true;
         if (selectedRow == selectedCol) {
             for (int i = 0; i < ROWS; ++i) {
@@ -74,7 +73,7 @@ public class Board {
             winDiag = false;
         }
 
-        // Check for a win in the anti-diagonal.
+        // Check for a win in the anti-diagonal
         boolean winAntiDiag = true;
         if (selectedRow + selectedCol == ROWS - 1) {
             for (int i = 0; i < ROWS; ++i) {
