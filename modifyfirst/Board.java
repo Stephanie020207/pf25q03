@@ -2,9 +2,6 @@ package modifyfirst;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Board {
     public static int ROWS; // Number of rows in the board
@@ -16,14 +13,6 @@ public class Board {
         ROWS = size;
         COLS = size;
         initGame();
-
-        // Load the background image
-        try {
-            background = ImageIO.read(getClass().getResource("/modifyfirst/gamebg.jpg"));
-        } catch (IOException e) {
-            System.err.println("Background image not found: " + e.getMessage());
-            background = null;
-        }
     }
 
     public void initGame() {
@@ -101,18 +90,11 @@ public class Board {
 
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-
-        // Draw the background image
-        if (background != null) {
-            g2d.drawImage(background, 0, 0, null);
-        } else {
-            // If no image, fill with a fallback color
-            g2d.setColor(Color.BLACK);
-            g2d.fillRect(0, 0, Cell.SIZE * COLS, Cell.SIZE * ROWS);
-        }
+        // Set the background color to blue and fill the entire board area
+        g2d.setColor(Color.GRAY);
+        g2d.fillRect(0, 0, Cell.SIZE * COLS, Cell.SIZE * ROWS);
 
         // Draw the grid lines
-        g2d.setColor(Color.LIGHT_GRAY);
         int cellSize = Cell.SIZE;
         for (int row = 1; row < ROWS; ++row) {
             g2d.fillRect(0, cellSize * row - 1, cellSize * COLS, 2); // Horizontal line
