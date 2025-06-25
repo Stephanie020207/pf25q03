@@ -1,26 +1,31 @@
 package modifyfirst;
-import java.awt.*;
 
-/**
- * The Board class models the game board with dynamic rows and columns.
- */
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class Board {
     public static int ROWS; // Number of rows in the board
     public static int COLS; // Number of columns in the board
     public Cell[][] cells;  // 2D array of cells representing the board
+    private BufferedImage background; // To hold the background image
 
-    /**
-     * Constructor to initialize the board with a given size.
-     *
-     * @param size The size of the board (e.g., 3x3, 5x5, etc.)
-     */
     public Board(int size) {
         ROWS = size;
         COLS = size;
         initGame();
+
+        // Load the background image
+        try {
+            background = ImageIO.read(getClass().getResource("/modifyfirst/gamebg.jpg"));
+        } catch (IOException e) {
+            System.err.println("Background image not found: " + e.getMessage());
+            background = null;
+        }
     }
 
-    /** Initialize the game objects (cells on the board). */
     public void initGame() {
         cells = new Cell[ROWS][COLS];
         for (int row = 0; row < ROWS; ++row) {
@@ -30,14 +35,6 @@ public class Board {
         }
     }
 
-    /**
-     * Update the game state after a player makes a move.
-     *
-     * @param player       The current player (CROSS or NOUGHT).
-     * @param selectedRow  The row of the cell where the move is made.
-     * @param selectedCol  The column of the cell where the move is made.
-     * @return The new state of the game.
-     */
     public State stepGame(Seed player, int selectedRow, int selectedCol) {
         // Update the cell with the player's move.
         cells[selectedRow][selectedCol].content = player;
@@ -102,24 +99,29 @@ public class Board {
         }
     }
 
-    /**
-     * Paint the board and its cells on the graphics canvas.
-     *
-     * @param g The Graphics context for painting.
-     */
     public void paint(Graphics g) {
-        g.setColor(Color.LIGHT_GRAY);
-        int cellSize = Cell.SIZE;
+        Graphics2D g2d = (Graphics2D) g;
 
-        // Draw the grid lines.
+        // Draw the background image
+        if (background != null) {
+            g2d.drawImage(background, 0, 0, null);
+        } else {
+            // If no image, fill with a fallback color
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, Cell.SIZE * COLS, Cell.SIZE * ROWS);
+        }
+
+        // Draw the grid lines
+        g2d.setColor(Color.LIGHT_GRAY);
+        int cellSize = Cell.SIZE;
         for (int row = 1; row < ROWS; ++row) {
-            g.fillRect(0, cellSize * row - 1, cellSize * COLS, 2); // Horizontal line
+            g2d.fillRect(0, cellSize * row - 1, cellSize * COLS, 2); // Horizontal line
         }
         for (int col = 1; col < COLS; ++col) {
-            g.fillRect(cellSize * col - 1, 0, 2, cellSize * ROWS); // Vertical line
+            g2d.fillRect(cellSize * col - 1, 0, 2, cellSize * ROWS); // Vertical line
         }
 
-        // Paint all the cells.
+        // Paint all the cells
         for (int row = 0; row < ROWS; ++row) {
             for (int col = 0; col < COLS; ++col) {
                 cells[row][col].paint(g);

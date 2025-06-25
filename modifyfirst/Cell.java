@@ -2,9 +2,6 @@ package modifyfirst;
 
 import java.awt.*;
 
-/**
- * The Cell class models each individual cell of the game board.
- */
 public class Cell {
     public static final int SIZE = 120; // cell width/height (square)
     public static final int PADDING = SIZE / 5;
@@ -26,14 +23,26 @@ public class Cell {
 
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+
+        // Set the thickness for the cell borders
+        float lineThickness = 4.0f; // Adjust this value for thicker or thinner lines
+        g2d.setStroke(new BasicStroke(lineThickness)); // Set stroke thickness
+
+        // Draw the cell border in black
+        g2d.setColor(Color.BLACK);
+        int x = col * SIZE;
+        int y = row * SIZE;
+        g2d.drawRect(x, y, SIZE, SIZE);
+
+        // Draw the content (CROSS or NOUGHT)
         g2d.setStroke(new BasicStroke(SEED_STROKE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        int x1 = col * SIZE + PADDING;
-        int y1 = row * SIZE + PADDING;
+        int x1 = x + PADDING;
+        int y1 = y + PADDING;
 
         if (content == Seed.CROSS) {
             g2d.setColor(GameMain.COLOR_CROSS);
-            int x2 = (col + 1) * SIZE - PADDING;
-            int y2 = (row + 1) * SIZE - PADDING;
+            int x2 = x + SIZE - PADDING;
+            int y2 = y + SIZE - PADDING;
             g2d.drawLine(x1, y1, x2, y2);
             g2d.drawLine(x2, y1, x1, y2);
         } else if (content == Seed.NOUGHT) {

@@ -13,18 +13,45 @@ public class LoginPage extends JDialog {
 
     public LoginPage() {
         setTitle("Login");
+        setUndecorated(true); // Remove window decorations
         setModal(true);
-        setLayout(new GridLayout(3, 2));
 
-        add(new JLabel("Username:"));
+        // Set full-screen size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize);
+        setLayout(new BorderLayout());
+
+        // Background Panel
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(34, 40, 49)); // Dark background
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        backgroundPanel.setLayout(new GridBagLayout());
+        add(backgroundPanel);
+
+        // Login Form Panel
+        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formPanel.setOpaque(false);
+        formPanel.setPreferredSize(new Dimension(400, 200));
+
+        JLabel usernameLabel = createStyledLabel("Username:");
+        formPanel.add(usernameLabel);
         JTextField usernameField = new JTextField();
-        add(usernameField);
+        usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
+        formPanel.add(usernameField);
 
-        add(new JLabel("Password:"));
+        JLabel passwordLabel = createStyledLabel("Password:");
+        formPanel.add(passwordLabel);
         JPasswordField passwordField = new JPasswordField();
-        add(passwordField);
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
+        formPanel.add(passwordField);
 
         JButton loginButton = new JButton("Login");
+        styleButton(loginButton);
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
@@ -35,15 +62,29 @@ public class LoginPage extends JDialog {
                 JOptionPane.showMessageDialog(this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
-        add(loginButton);
+        formPanel.add(loginButton);
 
         JButton cancelButton = new JButton("Cancel");
+        styleButton(cancelButton);
         cancelButton.addActionListener(e -> dispose());
-        add(cancelButton);
+        formPanel.add(cancelButton);
 
-        pack();
+        backgroundPanel.add(formPanel);
         setLocationRelativeTo(null);
+    }
+
+    private JLabel createStyledLabel(String text) {
+        JLabel label = new JLabel(text, JLabel.RIGHT);
+        label.setFont(new Font("Arial", Font.BOLD, 18));
+        label.setForeground(Color.WHITE);
+        return label;
+    }
+
+    private void styleButton(JButton button) {
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setBackground(new Color(52, 73, 94));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
     }
 
     private boolean validateCredentials(String username, String password) {
@@ -67,23 +108,10 @@ public class LoginPage extends JDialog {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Database connection failed.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
         return false; // Invalid credentials
     }
 
     public boolean isLoginSuccessful() {
         return loginSuccessful;
-    }
-
-    public static void main(String[] args) {
-        LoginPage loginPage = new LoginPage();
-        loginPage.setVisible(true);
-
-        if (loginPage.isLoginSuccessful()) {
-            System.out.println("Login successful! Proceeding to game...");
-            // Replace with your next step, e.g., opening the game or board selection
-        } else {
-            System.out.println("Login failed. Exiting...");
-        }
     }
 }

@@ -1,11 +1,12 @@
 package modifyfirst;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class GameMain extends JPanel {
     public static final String TITLE = "Tic Tac Toe";
-    public static final Color COLOR_CROSS = new Color(216, 7, 239);  // Purple
+    public static final Color COLOR_CROSS = new Color(216, 7, 239); // Purple
     public static final Color COLOR_NOUGHT = new Color(64, 154, 225); // Blue
     public static int BOARD_SIZE = 3;
 
@@ -26,22 +27,38 @@ public class GameMain extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int mouseX = e.getX();
-                int mouseY = e.getY();
-                int row = mouseY / Cell.SIZE;
-                int col = mouseX / Cell.SIZE;
+                // Get the dimensions of the panel
+                int panelWidth = getWidth();
+                int panelHeight = getHeight();
 
-                if (currentState == State.PLAYING) {
-                    if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE
-                            && board.cells[row][col].content == Seed.NO_SEED) {
-                        currentState = board.stepGame(currentPlayer, row, col);
-                        currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
-                        updateStatus();
+                // Calculate the total board size
+                int boardWidth = Cell.SIZE * Board.COLS;
+                int boardHeight = Cell.SIZE * Board.ROWS;
+
+                // Calculate offsets to center the board
+                int offsetX = (panelWidth - boardWidth) / 2;
+                int offsetY = (panelHeight - boardHeight) / 2;
+
+                // Determine if the click is within the board area
+                int mouseX = e.getX() - offsetX;
+                int mouseY = e.getY() - offsetY;
+
+                if (mouseX >= 0 && mouseX < boardWidth && mouseY >= 0 && mouseY < boardHeight) {
+                    // Calculate the clicked cell's row and column
+                    int row = mouseY / Cell.SIZE;
+                    int col = mouseX / Cell.SIZE;
+
+                    if (currentState == State.PLAYING) {
+                        if (board.cells[row][col].content == Seed.NO_SEED) {
+                            currentState = board.stepGame(currentPlayer, row, col);
+                            currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+                            updateStatus();
+                        }
+                    } else {
+                        newGame();
                     }
-                } else {
-                    newGame();
+                    repaint();
                 }
-                repaint();
             }
         });
     }
@@ -80,7 +97,7 @@ public class GameMain extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Get the dimensions of the current panel
+        // Get the dimensions of the panel
         int panelWidth = getWidth();
         int panelHeight = getHeight();
 
@@ -99,7 +116,6 @@ public class GameMain extends JPanel {
         g2d.dispose();
     }
 
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             LoginPage loginPage = new LoginPage();
@@ -113,7 +129,7 @@ public class GameMain extends JPanel {
                 JFrame frame = new JFrame(TITLE);
                 frame.setContentPane(new GameMain());
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.pack();
+                frame.setSize(800, 800); // Set an appropriate size for full-screen appearance
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
             }
